@@ -1,59 +1,132 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: VPC creada en Cloudformation para challenge de Meli
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "AWS CloudFormation VPC para proyecto Meli"
+
 Resources:
+  # VPC - configuracion basica de la vpc para el proyecto
+  # Tipo de IP Clase A
+
   MyVPC:
-    Type: AWS::EC2::VPC
+    Type: "AWS::EC2::VPC"
     Properties:
-      CidrBlock: 10.2.30.30/16
+      CidrBlock: "10.30.0.0/16"
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
-        - Key: VPC-Proyecto Meli
-          Value: VPC-Proyecto Meli
+        - Key: "VPC-proyecto Meli"
+          Value: "VPC-proyecto Meli"
 
-  InternetGateway:
-    Type: AWS::EC2::InternetGateway
+#  En la siguiente seccion se especifica la configuracion de la subnet publica y privada numero 1:
+#  AvailabilityZone predeterminada : sa-east-1a
 
-  AttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
+  # subnet publica numero 1 
+  PublicSubnet1:
+    Type: "AWS::EC2::Subnet"
     Properties:
-      VpcId: !Ref VPC-Proyecto Meli
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.30.1.0/24"
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: sa-east-1a
+      Tags:
+        - Key: "Subnet publica Meli numero 1"
+          Value: "Subnet publica Meli numero 1"
+
+ # subnet privada numero 1 
+  PrivateSubnet1:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.30.2.0/24"
+      AvailabilityZone: sa-east-1a
+      Tags:
+        - Key: "Subnet privada Meli numero 1"
+          Value: "Subnet privada Meli numero 1"
+
+#  En la siguiente seccion se especifica la configuracion de la subnet publica y privada numero 2:
+#  AvailabilityZone predeterminada : sa-east-1b
+
+ # subnet publica numero 2
+  PublicSubnet2:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.30.3.0/24"
+      MapPublicIpOnLaunch: true
+      AvailabilityZone: sa-east-1b
+      Tags:
+        - Key: "Subnet publica Meli numero 2"
+          Value: "Subnet publica Meli numero 2"
+
+
+  # subnet privada numero 2
+  PrivateSubnet2:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: "10.30.4.0/24"
+      AvailabilityZone: sa-east-1b
+      Tags:
+        - Key: "Subnet privada Meli numero 2"
+          Value: "Subnet privada Meli numero 2"
+
+  # Internet Gateway
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: "GTW-proyecto Meli"
+          Value: "GTW-proyecto Meli"
+
+  # Attach Internet Gateway to VPC
+  AttachGateway:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      VpcId: !Ref MyVPC
       InternetGatewayId: !Ref InternetGateway
 
+  # Public Route Table
   PublicRouteTable:
-    Type: AWS::EC2::RouteTable
+    Type: "AWS::EC2::RouteTable"
     Properties:
-      VpcId: !Ref VPC-Proyecto Meli
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: "Name"
+          Value: "PublicRouteTable"
 
+  # Route for Public Internet Access
   PublicRoute:
-    Type: AWS::EC2::Route
+    Type: "AWS::EC2::Route"
     DependsOn: AttachGateway
     Properties:
       RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: 0.0.0.0/0
+      DestinationCidrBlock: "0.0.0.0/0"
       GatewayId: !Ref InternetGateway
 
-  PublicSubnet:
-    Type: AWS::EC2::Subnet
+  # Associate Public Subnets with Public Route Table
+  PublicSubnet1RouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
-      CidrBlock: 10.0.1.0/24
-      VpcId: !Ref MyVPC
-      MapPublicIpOnLaunch: true
-      Tags:
-        - Key: Name
-          Value: PublicSubnet
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
 
-  SubnetRouteTableAssociation:
-    Type: AWS::EC2::SubnetRouteTableAssociation
+  PublicSubnet2RouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
     Properties:
-      SubnetId: !Ref PublicSubnet
+      SubnetId: !Ref PublicSubnet2
       RouteTableId: !Ref PublicRouteTable
 
 Outputs:
   VPCId:
-    Description: The ID of the VPC
+    Description: "VPC ID"
     Value: !Ref MyVPC
-
-  SubnetId:
-    Description: The ID of the public subnet
-    Value: !Ref PublicSubnet
+  PublicSubnet1Id:
+    Description: "Public Subnet 1 ID"
+    Value: !Ref PublicSubnet1
+  PublicSubnet2Id:
+    Description: "Public Subnet 2 ID"
+    Value: !Ref PublicSubnet2
+  PrivateSubnet1Id:
+    Description: "Private Subnet 1 ID"
+    Value: !Ref PrivateSubnet1
+  PrivateSubnet2Id:
+    Description: "Private Subnet 2 ID"
+    Value: !Ref PrivateSubnet2
