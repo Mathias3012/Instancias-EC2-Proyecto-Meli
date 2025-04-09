@@ -73,10 +73,9 @@ Resources:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
-        - Key: "GTW-proyecto Meli"
-          Value: "GTW-proyecto Meli"
+        - Key: "Name"
+          Value: "Internet Gateway"
 
-  # Attach Internet Gateway to VPC
   AttachGateway:
     Type: "AWS::EC2::VPCGatewayAttachment"
     Properties:
@@ -90,9 +89,9 @@ Resources:
       VpcId: !Ref MyVPC
       Tags:
         - Key: "Name"
-          Value: "PublicRouteTable"
+          Value: "Public Route Table"
 
-  # Route for Public Internet Access
+  # Public Route
   PublicRoute:
     Type: "AWS::EC2::Route"
     DependsOn: AttachGateway
@@ -114,6 +113,55 @@ Resources:
       SubnetId: !Ref PublicSubnet2
       RouteTableId: !Ref PublicRouteTable
 
+  # Elastic IP for NAT Gateway
+  NatGatewayElasticIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
+      Tags:
+        - Key: "Name"
+          Value: "NAT Gateway Elastic IP"
+
+  # NAT Gateway in Public Subnet 1
+  NatGateway:
+    Type: "AWS::EC2::NatGateway"
+    Properties:
+      AllocationId: !GetAtt NatGatewayElasticIP.AllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: "Name"
+          Value: "NAT Gateway"
+
+  # Private Route Table
+  PrivateRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref MyVPC
+      Tags:
+        - Key: "Name"
+          Value: "Private Route Table"
+
+  # Private Route for NAT Gateway
+  PrivateRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: "0.0.0.0/0"
+      NatGatewayId: !Ref NatGateway
+
+  # Associate Private Subnets with Private Route Table
+  PrivateSubnet1RouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet1
+      RouteTableId: !Ref PrivateRouteTable
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PrivateSubnet2
+      RouteTableId: !Ref PrivateRouteTable
+
 Outputs:
   VPCId:
     Description: "VPC ID"
@@ -130,3 +178,9 @@ Outputs:
   PrivateSubnet2Id:
     Description: "Private Subnet 2 ID"
     Value: !Ref PrivateSubnet2
+  InternetGatewayId:
+    Description: "Internet Gateway ID"
+    Value: !Ref InternetGateway
+  NatGatewayId:
+    Description: "NAT Gateway ID"
+    Value: !Ref NatGateway
