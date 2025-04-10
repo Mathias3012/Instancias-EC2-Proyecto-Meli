@@ -90,7 +90,7 @@ Resources:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
-        - Key: "Name"
+        - Key: "Gateway proyecto Meli"
           Value: "Internet Gateway"
 
   AttachGateway:
@@ -105,7 +105,7 @@ Resources:
     Properties:
       VpcId: !Ref MyVPC
       Tags:
-        - Key: "Name"
+        - Key: "Public Route Proyecto Meli"
           Value: "Public Route Table"
 
   # Public Route
@@ -136,7 +136,7 @@ Resources:
     Properties:
       Domain: "vpc"
       Tags:
-        - Key: "Name"
+        - Key: "Nat gateway"
           Value: "NAT Gateway Elastic IP"
 
   # NAT Gateway in Public Subnet 1
@@ -146,7 +146,7 @@ Resources:
       AllocationId: !GetAtt NatGatewayElasticIP.AllocationId
       SubnetId: !Ref PublicSubnet1
       Tags:
-        - Key: "Name"
+        - Key: "NAT para subnet publica 1"
           Value: "NAT Gateway"
 
   # Private Route Table
@@ -155,7 +155,7 @@ Resources:
     Properties:
       VpcId: !Ref MyVPC
       Tags:
-        - Key: "Name"
+        - Key: "Private Route Table"
           Value: "Private Route Table"
 
   # Private Route for NAT Gateway
