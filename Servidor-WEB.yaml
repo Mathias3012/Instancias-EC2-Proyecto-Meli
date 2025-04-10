@@ -10,23 +10,3 @@
       Tags:
         - Key: "MiServidorWebEC2"
           Value: "EC2-instance-Meli"
-
-
-MySecurityGroup:
-    Type: "AWS::EC2::SecurityGroup"
-    Properties:
-      GroupDescription: "Enable SSH and HTTP access"
-      VpcId: !Ref MyVPC
-      SecurityGroupIngress:
-        - IpProtocol: "tcp"
-          FromPort: 22
-          ToPort: 22
-          CidrIp: "0.0.0.0/0" 
-        - IpProtocol: "tcp"
-          FromPort: 80
-          ToPort: 80
-          CidrIp: "0.0.0.0/0" 
-      Tags:
-        - Key: "SecurityGroup-Meli"
-          Value: "SecurityGroup-Meli"
-
