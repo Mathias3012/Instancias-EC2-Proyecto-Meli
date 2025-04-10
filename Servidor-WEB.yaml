@@ -1,4 +1,4 @@
-Recources:
+Resources:
    MiServidorWebEC2:
     Type: "AWS::EC2::Instance"
     Properties:
