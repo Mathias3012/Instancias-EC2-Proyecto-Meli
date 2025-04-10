@@ -2,10 +2,9 @@ Resources:
    MiServidorWebEC2:
     Type: "AWS::EC2::Instance"
     Properties:
-      InstanceType: "t2.micro" 
-      KeyName: "Key-Proyecto-Meli" 
-      SubnetId: !Ref PublicSubnet1 
       ImageId: "ami-092cd6a84ad570057"
+      KeyName: "Key-Proyecto-Meli" 
+      InstanceType: "t2.micro" 
       Tags:
         - Key: "MiServidorWebEC2"
           Value: "EC2-instance-Meli"
