@@ -5,13 +5,6 @@ Resources:
       ImageId: "ami-092cd6a84ad570057"
       KeyName: "Key-Proyecto-Meli" 
       InstanceType: "t2.micro"
-      BlockDevIceMapping:
-         DeviceName:"ServidorWeb"
-         Ebs:
-            VolumeType:"gp3"
-            DeleteOnTermination: "true"
-            VolumeSize: 10
-    
       Tags:
         - Key: "MiServidorWebEC2"
           Value: "EC2-instance-Meli"
