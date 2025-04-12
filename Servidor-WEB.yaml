@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: "Instancia EC2 Free Tier en VPC Proyecto Meli (sa-east-1)"
+Description: "Instancia EC2 para servidor web Proyecto Meli"
 
 Resources:
   InstanceSecurityGroup:
