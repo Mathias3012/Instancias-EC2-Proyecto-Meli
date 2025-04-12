@@ -6,7 +6,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Acceso SSH y HTTP
-      VpcId: !ImportValue VPCId
+      VpcId: !ImportValue vpc-0016fc78ed69e5425
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -29,7 +29,7 @@ Resources:
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
-          SubnetId: !ImportValue PublicSubnet1Id
+          SubnetId: !ImportValue subnet-0b52c560f8b14e5eb
           GroupSet:
             - !Ref InstanceSecurityGroup
       BlockDeviceMappings:
