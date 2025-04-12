@@ -6,7 +6,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Acceso SSH y HTTP
-      VpcId: !ImportValue vpc-0016fc78ed69e5425
+      VpcId: !ImportValue VPC-proyecto-Meli
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
@@ -29,7 +29,7 @@ Resources:
       NetworkInterfaces:
         - AssociatePublicIpAddress: true
           DeviceIndex: 0
-          SubnetId: !ImportValue subnet-0b52c560f8b14e5eb
+          SubnetId: !ImportValue PublicSubnet1-proyecto-Meli
           GroupSet:
             - !Ref InstanceSecurityGroup
       BlockDeviceMappings:
@@ -39,12 +39,12 @@ Resources:
             VolumeType: gp3
             DeleteOnTermination: true
       Tags:
-        - Key: Name
-          Value: InstanciaEC2-Meli-FreeTier
+        - Key: Servidor-Web-Proyecto-Meli
+          Value: InstanciaEC2-Meli
 
 Outputs:
   InstanceId:
-    Description: ID de la instancia EC2
+    Description: Servidor-Web-Proyecto-Meli
     Value: !Ref EC2Instance
 
   PublicIP:
